@@ -1,4 +1,4 @@
 #!/usr/bin/env node
-const gendiff = require('../gendiff.js');
+const cli = require('../cli.js');
 
-gendiff();
+cli();

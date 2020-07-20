@@ -1,11 +1,38 @@
-const { program } = require('commander');
-const { version, description } = require('./package.json');
+const fs = require('fs');
+const has = require('lodash.has');
 
-const gendiff = () => {
-  program.version(version).description(description).arguments('<filepath1>  <filepath2>');
-  program.option('-f, --format [type]', 'output format');
-
-  program.parse(process.argv);
+const readFileJSON = (filepath) => {
+  const data = fs.readFileSync(filepath, { encoding: 'utf8' });
+  const parsedData = JSON.parse(data);
+  return parsedData;
 };
 
-module.exports = gendiff;
+const genDiff = (filepath1, filepath2) => {
+  const data1 = readFileJSON(filepath1);
+  const data2 = readFileJSON(filepath2);
+
+  const diffs = [];
+
+  const data = { ...data1, ...data2 };
+
+  Object.keys(data).forEach((key) => {
+    const value1 = data1[key];
+    const value2 = data2[key];
+
+    if (value1 === value2) {
+      diffs.push(`  ${key}: ${value1}`);
+      return;
+    }
+
+    if (has(data1, key)) {
+      diffs.push(`- ${key}: ${value1}`);
+    }
+    if (has(data2, key)) {
+      diffs.push(`+ ${key}: ${value2}`);
+    }
+  });
+
+  return diffs.join('\n');
+};
+
+module.exports = genDiff;

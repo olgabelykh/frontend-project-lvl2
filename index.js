@@ -1,3 +1,1 @@
-const gendiff = require('./gendiff.js');
-
-gendiff();
+module.exports = require('./gendiff');

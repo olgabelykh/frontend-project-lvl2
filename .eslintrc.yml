@@ -1,8 +1,11 @@
 env:
   node: true
-extends: 'airbnb-base'
+extends:
+  - 'airbnb-base'
+  - 'plugin:jest/recommended'
 plugins:
   - import
+  - jest
 rules:
   no-console: 0
   import/extensions: 0
