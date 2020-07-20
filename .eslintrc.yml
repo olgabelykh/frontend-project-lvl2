@@ -1,0 +1,9 @@
+env:
+  node: true
+extends: 'airbnb-base'
+plugins:
+  - import
+rules:
+  no-console: 0
+  import/extensions: 0
+  linebreak-style: ['error', 'unix']
