@@ -5,7 +5,7 @@ import program from 'commander';
 import genDiff from './gendiff.js';
 
 const require = createRequire(import.meta.url);
-const { version, description } = require('./package.json');
+const { version, description } = require('../package.json');
 
 const cli = () => {
   program

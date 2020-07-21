@@ -1,15 +1,10 @@
-import fs from 'fs';
 import has from 'lodash.has';
 
-const readFileJSON = (filepath) => {
-  const data = fs.readFileSync(filepath, { encoding: 'utf8' });
-  const parsedData = JSON.parse(data);
-  return parsedData;
-};
+import parse from './parse.js';
 
 const genDiff = (filepath1, filepath2) => {
-  const data1 = readFileJSON(filepath1);
-  const data2 = readFileJSON(filepath2);
+  const data1 = parse(filepath1);
+  const data2 = parse(filepath2);
 
   const diffs = [];
 
