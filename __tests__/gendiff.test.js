@@ -1,5 +1,10 @@
-const path = require('path');
-const genDiff = require('../gendiff.js');
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+import genDiff from '../gendiff.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 describe('genDiff', () => {
   it('should compare json files', () => {

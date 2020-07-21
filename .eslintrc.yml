@@ -6,7 +6,10 @@ extends:
 plugins:
   - import
   - jest
+parserOptions:
+  ecmaVersion: 2020
 rules:
   no-console: 0
   import/extensions: 0
   linebreak-style: ['error', 'unix']
+  no-underscore-dangle: 0

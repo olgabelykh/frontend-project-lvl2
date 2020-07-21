@@ -1,7 +1,11 @@
-const path = require('path');
-const { program } = require('commander');
+import path from 'path';
+import { createRequire } from 'module';
+import program from 'commander';
+
+import genDiff from './gendiff.js';
+
+const require = createRequire(import.meta.url);
 const { version, description } = require('./package.json');
-const genDiff = require('./gendiff');
 
 const cli = () => {
   program
@@ -19,4 +23,4 @@ const cli = () => {
   program.parse(process.argv);
 };
 
-module.exports = cli;
+export default cli;

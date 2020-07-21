@@ -1,5 +1,5 @@
-const fs = require('fs');
-const has = require('lodash.has');
+import fs from 'fs';
+import has from 'lodash.has';
 
 const readFileJSON = (filepath) => {
   const data = fs.readFileSync(filepath, { encoding: 'utf8' });
@@ -35,4 +35,4 @@ const genDiff = (filepath1, filepath2) => {
   return diffs.join('\n');
 };
 
-module.exports = genDiff;
+export default genDiff;

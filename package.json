@@ -4,11 +4,12 @@
   "description": "Compares two configuration files and shows a difference.",
   "main": "index.js",
   "scripts": {
-    "test": "npx jest"
+    "test": "npx -n --experimental-vm-modules jest"
   },
   "bin": {
     "gendiff": "bin/gendiff.js"
   },
+  "type": "module",
   "keywords": [],
   "author": "Olya Belykh",
   "license": "ISC",
