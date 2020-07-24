@@ -15,12 +15,10 @@ const mapping = {
   '.ini': parseIni,
 };
 
-const parse = (filepath) => {
+export default (filepath) => {
   const extname = path.extname(filepath);
   const data = fs.readFileSync(filepath, 'utf8');
 
   const parsedData = mapping[extname](data);
   return parsedData;
 };
-
-export default parse;

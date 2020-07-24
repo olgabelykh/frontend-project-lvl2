@@ -1,33 +1,13 @@
-import has from 'lodash.has';
-
+import compare from './compare.js';
 import parse from './parse.js';
+import createFormatter from './formatters/index.js';
 
-const genDiff = (filepath1, filepath2) => {
+export default (filepath1, filepath2, format) => {
   const data1 = parse(filepath1);
   const data2 = parse(filepath2);
 
-  const diffs = [];
+  const diff = compare(data1, data2);
 
-  const data = { ...data1, ...data2 };
-
-  Object.keys(data).forEach((key) => {
-    const value1 = data1[key];
-    const value2 = data2[key];
-
-    if (value1 === value2) {
-      diffs.push(`  ${key}: ${value1}`);
-      return;
-    }
-
-    if (has(data1, key)) {
-      diffs.push(`- ${key}: ${value1}`);
-    }
-    if (has(data2, key)) {
-      diffs.push(`+ ${key}: ${value2}`);
-    }
-  });
-
-  return diffs.join('\n');
+  const formatDiff = createFormatter(format);
+  return formatDiff(diff);
 };
-
-export default genDiff;

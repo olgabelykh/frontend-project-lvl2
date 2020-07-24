@@ -1,17 +1,13 @@
 env:
   node: true
+  browser: true
 extends:
   - 'airbnb-base'
   - 'plugin:jest/recommended'
 plugins:
   - import
-  - jest
-parserOptions:
-  ecmaVersion: 2020
 rules:
   no-console: 0
   import/extensions: 0
   linebreak-style: ['error', 'unix']
   no-underscore-dangle: 0
-  object-curly-newline: 'off'
-  operator-linebreak: ['error', 'after']

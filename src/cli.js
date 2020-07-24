@@ -7,20 +7,18 @@ import genDiff from './gendiff.js';
 const require = createRequire(import.meta.url);
 const { version, description } = require('../package.json');
 
-const cli = () => {
+export default () => {
   program
     .version(version)
     .description(description)
-    .option('-f, --format [type]', 'output format')
+    .option('-f, --format [type]', 'output format', 'stylish')
     .arguments('<filepath1>  <filepath2>')
-    .action((filepath1, filepath2) => {
-      const resolvedFilePath1 = path.resolve(filepath1);
-      const resolvedFilePath2 = path.resolve(filepath2);
-      const diff = genDiff(resolvedFilePath1, resolvedFilePath2);
+    .action((filepath1, filepath2, { format }) => {
+      const resolvedFilepath1 = path.resolve(filepath1);
+      const resolvedFilepath2 = path.resolve(filepath2);
+      const diff = genDiff(resolvedFilepath1, resolvedFilepath2, format);
       console.log(diff);
     });
 
   program.parse(process.argv);
 };
-
-export default cli;

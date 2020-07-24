@@ -1,0 +1,6 @@
+Property 'setting1' was removed
+Property 'section1.setting3' was updated. From 'install.ico' to 'ins.ico'
+Property 'section2' was removed
+Property 'section3.IconIndex' was updated. From 0 to 1
+Property 'section3.value' was updated. From 6 to 8
+Property 'setting0' was added with value: 0

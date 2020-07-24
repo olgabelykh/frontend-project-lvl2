@@ -1,56 +1,29 @@
-import path, { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'fs';
 
+import getFixturePath from '../src/test-helpers/getFixturePath.js';
 import genDiff from '../src/gendiff.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
 describe('genDiff', () => {
-  it('should compare json files', () => {
-    const filepath1 = path.resolve(__dirname, '__fixtures__', 'file1.json');
-    const filepath2 = path.resolve(__dirname, '__fixtures__', 'file2.json');
+  test.each([
+    ['file1.json', 'file2.json', 'stylish', 'diff-json.txt'],
+    ['file1.json', 'file2.json', 'plain', 'diff-json.txt'],
+    ['file1.json', 'file2.json', 'json', 'diff-json.txt'],
+    ['file1.yml', 'file2.yml', 'stylish', 'diff-yml.txt'],
+    ['file1.yml', 'file2.yml', 'plain', 'diff-yml.txt'],
+    ['file1.yml', 'file2.yml', 'json', 'diff-yml.txt'],
+    ['file1.ini', 'file2.ini', 'stylish', 'diff-ini.txt'],
+    ['file1.ini', 'file2.ini', 'plain', 'diff-ini.txt'],
+    ['file1.ini', 'file2.ini', 'json', 'diff-ini.txt'],
+  ])(
+    'should compare files %s, %s and return report in %s format',
+    (filename1, filename2, format, diffFilename) => {
+      const filepath1 = getFixturePath(filename1);
+      const filepath2 = getFixturePath(filename2);
 
-    const expected = [
-      '  host: hexlet.io',
-      '- timeout: 50',
-      '+ timeout: 20',
-      '- proxy: 123.234.53.22',
-      '- follow: false',
-      '+ verbose: true',
-    ].join('\n');
+      const diffFilepath = getFixturePath('expected', format, diffFilename);
+      const expected = fs.readFileSync(diffFilepath, 'utf8').trim();
 
-    expect(genDiff(filepath1, filepath2)).toBe(expected);
-  });
-
-  it('should compare yaml files', () => {
-    const filepath1 = path.resolve(__dirname, '__fixtures__', 'file1.yml');
-    const filepath2 = path.resolve(__dirname, '__fixtures__', 'file2.yml');
-
-    const expected = [
-      '  user: Tony Hawk',
-      '- country: Italy',
-      '+ country: Germany',
-      '- location: Rome',
-      '+ age: 34',
-    ].join('\n');
-
-    expect(genDiff(filepath1, filepath2)).toBe(expected);
-  });
-
-  it('should compare ini files', () => {
-    const filepath1 = path.resolve(__dirname, '__fixtures__', 'file1.ini');
-    const filepath2 = path.resolve(__dirname, '__fixtures__', 'file2.ini');
-
-    const expected = [
-      '- IconFile: install.ico',
-      '+ IconFile: hey.ico',
-      '  IconIndex: 0',
-      '- InfoTip: Description',
-      '+ IconArea_Image: bkground.jpg',
-      '+ IconArea_Text: 20123',
-    ].join('\n');
-
-    expect(genDiff(filepath1, filepath2)).toBe(expected);
-  });
+      expect(genDiff(filepath1, filepath2, format)).toBe(expected);
+    },
+  );
 });

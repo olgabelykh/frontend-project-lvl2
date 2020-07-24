@@ -1,0 +1,58 @@
+{
+ "setting1": {
+  "status": "deleted",
+  "value": 0,
+  "type": "number"
+ },
+ "setting2": {
+  "status": "unmodified",
+  "value": 10,
+  "type": "number"
+ },
+ "section1": {
+  "status": "nested",
+  "value": {
+   "setting3": {
+    "status": "modified",
+    "value": "ins.ico",
+    "prevValue": "install.ico",
+    "type": "string",
+    "prevType": "string"
+   }
+  }
+ },
+ "section2": {
+  "status": "deleted",
+  "value": {},
+  "type": "complex"
+ },
+ "section3": {
+  "status": "nested",
+  "value": {
+   "IconIndex": {
+    "status": "modified",
+    "value": 1,
+    "prevValue": 0,
+    "type": "number",
+    "prevType": "number"
+   },
+   "InfoTip": {
+    "status": "unmodified",
+    "value": "Description",
+    "type": "string"
+   },
+   "value": {
+    "status": "modified",
+    "value": 8,
+    "prevValue": 6,
+    "type": "number",
+    "prevType": "number"
+   }
+  }
+ },
+ "setting0": {
+  "status": "added",
+  "value": 0,
+  "type": "number"
+ }
+}

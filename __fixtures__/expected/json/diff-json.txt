@@ -1,0 +1,103 @@
+{
+ "common": {
+  "status": "nested",
+  "value": {
+   "setting1": {
+    "status": "unmodified",
+    "value": "Value 1",
+    "type": "string"
+   },
+   "setting2": {
+    "status": "deleted",
+    "value": 200,
+    "type": "number"
+   },
+   "setting3": {
+    "status": "modified",
+    "value": {
+     "key": "value"
+    },
+    "prevValue": true,
+    "type": "complex",
+    "prevType": "boolean"
+   },
+   "setting6": {
+    "status": "nested",
+    "value": {
+     "key": {
+      "status": "unmodified",
+      "value": "value",
+      "type": "string"
+     },
+     "ops": {
+      "status": "added",
+      "value": "vops",
+      "type": "string"
+     }
+    }
+   },
+   "follow": {
+    "status": "added",
+    "value": false,
+    "type": "boolean"
+   },
+   "setting4": {
+    "status": "added",
+    "value": "blah blah",
+    "type": "string"
+   },
+   "setting5": {
+    "status": "added",
+    "value": {
+     "key5": "value5"
+    },
+    "type": "complex"
+   }
+  }
+ },
+ "group1": {
+  "status": "nested",
+  "value": {
+   "baz": {
+    "status": "modified",
+    "value": "bars",
+    "prevValue": "bas",
+    "type": "string",
+    "prevType": "string"
+   },
+   "foo": {
+    "status": "unmodified",
+    "value": "bar",
+    "type": "string"
+   },
+   "nest": {
+    "status": "modified",
+    "value": "str",
+    "prevValue": {
+     "key": "value"
+    },
+    "type": "string",
+    "prevType": "complex"
+   }
+  }
+ },
+ "group2": {
+  "status": "deleted",
+  "value": {
+   "abc": 12345
+  },
+  "type": "complex"
+ },
+ "setting8": {
+  "status": "deleted",
+  "value": {},
+  "type": "complex"
+ },
+ "group3": {
+  "status": "added",
+  "value": {
+   "fee": 100500
+  },
+  "type": "complex"
+ }
+}
