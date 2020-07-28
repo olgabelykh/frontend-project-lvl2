@@ -1,4 +1,4 @@
 Property 'env.browser' was added with value: true
-Property 'plugins' was updated. From [import, jest] to [import]
 Property 'parserOptions' was removed
-Property 'rules.object-curly-newline' was removed
+Property 'rules.object-curly-newline' was updated. From 'off' to 'on'
+Property 'rules.no-underscore-dangle' was added with value: 0

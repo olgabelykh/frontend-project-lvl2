@@ -1,66 +1,59 @@
 import {
-  STATUS_NESTED,
+  STATUS_UNMODIFIED,
   STATUS_MODIFIED,
   STATUS_DELETED,
   STATUS_ADDED,
-  TYPE_STRING,
-  TYPE_ARRAY,
-  TYPE_COMPLEX,
+  STATUS_NESTED,
 } from '../compare.js';
 
-const COMPLEX_VALUE = '[complex value]';
-
-const valueToStr = (value, type) => {
-  switch (type) {
-    case TYPE_COMPLEX:
-      return COMPLEX_VALUE;
-    case TYPE_STRING:
-      return `'${value}'`;
-    case TYPE_ARRAY:
-      return `[${value.join(', ')}]`;
-    default:
-      return value;
+const getValueStr = (value, isComplex) => {
+  if (isComplex) {
+    return '[complex value]';
   }
+
+  if (typeof value === 'string') {
+    return `'${value}'`;
+  }
+
+  return value;
 };
 
 export default (diff) => {
-  const helper = (subDiff, keys, strs) => {
-    const children = Object.entries(subDiff);
+  const helper = (nested, keys) => {
+    return nested
+      .filter(({ status }) => status !== STATUS_UNMODIFIED)
+      .map((item) => {
+        const {
+          key,
+          value,
+          prevValue,
+          isComplex,
+          isPrevComplex,
+          children,
+          status,
+        } = item;
 
-    if (children.length === 0) {
-      return '';
-    }
+        const pathKeys = [...keys, key];
+        const valuePath = pathKeys.join('.');
 
-    children.forEach(([key, { status, value, prevValue, type, prevType }]) => {
-      const pathKeys = [...keys, key];
-      const valuePath = pathKeys.join('.');
-      const valueStr = valueToStr(value, type);
-      const prevValueStr = valueToStr(prevValue, prevType);
+        const valueStr = getValueStr(value, isComplex);
+        const prevValueStr = getValueStr(prevValue, isPrevComplex);
 
-      let str;
-      switch (status) {
-        case STATUS_NESTED:
-          strs.push(helper(value, pathKeys, []));
-          break;
-        case STATUS_MODIFIED:
-          str = `Property '${valuePath}' was updated. From ${prevValueStr} to ${valueStr}`;
-          strs.push(str);
-          break;
-        case STATUS_DELETED:
-          str = `Property '${valuePath}' was removed`;
-          strs.push(str);
-          break;
-        case STATUS_ADDED:
-          str = `Property '${valuePath}' was added with value: ${valueStr}`;
-          strs.push(str);
-          break;
-        default:
-          break;
-      }
-    });
-
-    return strs.join('\n');
+        switch (status) {
+          case STATUS_NESTED:
+            return helper(children, pathKeys);
+          case STATUS_MODIFIED:
+            return `Property '${valuePath}' was updated. From ${prevValueStr} to ${valueStr}`;
+          case STATUS_DELETED:
+            return `Property '${valuePath}' was removed`;
+          case STATUS_ADDED:
+            return `Property '${valuePath}' was added with value: ${valueStr}`;
+          default:
+            throw new Error('Unexpeted status');
+        }
+      })
+      .join('\n');
   };
 
-  return helper(diff, [], []);
+  return helper(diff, []);
 };

@@ -1,57 +1,72 @@
+import isPlainObject from 'lodash.isplainobject';
+
 import {
-  STATUS_NESTED,
+  STATUS_UNMODIFIED,
   STATUS_MODIFIED,
   STATUS_DELETED,
   STATUS_ADDED,
-  TYPE_COMPLEX,
+  STATUS_NESTED,
 } from '../compare.js';
 
+const getValueIndent = (level) => ' '.repeat(level * 4 + 2);
+const getLevelIndent = (level) => ' '.repeat(level * 4);
+
+const getComplexStr = (complex, level) => {
+  const entries = Object.entries(complex);
+  if (entries.length === 0) {
+    return '{}';
+  }
+
+  const valueIndent = getValueIndent(level);
+  const entriesStr = entries
+    .map(([key, value]) => {
+      const valueStr = isPlainObject(value) ? getComplexStr(value) : value;
+      return `${valueIndent}  ${key}: ${valueStr}`;
+    })
+    .join('\n');
+  const levelIndent = getLevelIndent(level);
+  return `{\n${entriesStr}\n${levelIndent}}`;
+};
+
 export default (diff) => {
-  const helper = (subDiff, level) => {
-    const children = Object.entries(subDiff);
+  const helper = (nested, level) => {
+    const valueIndent = getValueIndent(level);
+    const nestedStr = nested
+      .map((item) => {
+        const {
+          key,
+          value,
+          prevValue,
+          isComplex,
+          isPrevComplex,
+          children,
+          status,
+        } = item;
 
-    if (children.length === 0) {
-      return '{}';
-    }
+        const valueStr = isComplex ? getComplexStr(value, level + 1) : value;
+        const prevValueStr = isPrevComplex
+          ? getComplexStr(prevValue, level + 1)
+          : prevValue;
 
-    const strs = ['{'];
-    const valueIndent = ' '.repeat(level * 4 + 2);
+        switch (status) {
+          case STATUS_NESTED:
+            return `${valueIndent}  ${key}: ${helper(children, level + 1)}`;
+          case STATUS_UNMODIFIED:
+            return `${valueIndent}  ${key}: ${valueStr}`;
+          case STATUS_MODIFIED:
+            return `${valueIndent}- ${key}: ${prevValueStr}\n${valueIndent}+ ${key}: ${valueStr}`;
+          case STATUS_DELETED:
+            return `${valueIndent}- ${key}: ${valueStr}`;
+          case STATUS_ADDED:
+            return `${valueIndent}+ ${key}: ${valueStr}`;
+          default:
+            throw new Error('Unexpected status');
+        }
+      })
+      .join('\n');
 
-    children.forEach(([key, item]) => {
-      const { status, value = item, prevValue, type, prevType } = item;
-
-      const valueStr = type === TYPE_COMPLEX ? helper(value, level + 1) : value;
-      const prevValueStr = prevType === TYPE_COMPLEX ? helper(prevValue, level + 1) : prevValue;
-
-      let str;
-      switch (status) {
-        case STATUS_NESTED:
-          str = `${valueIndent}  ${key}: ${helper(value, level + 1)}`;
-          strs.push(str);
-          break;
-        case STATUS_MODIFIED:
-          str = `${valueIndent}- ${key}: ${prevValueStr}`;
-          strs.push(str);
-          str = `${valueIndent}+ ${key}: ${valueStr}`;
-          strs.push(str);
-          break;
-        case STATUS_DELETED:
-          str = `${valueIndent}- ${key}: ${valueStr}`;
-          strs.push(str);
-          break;
-        case STATUS_ADDED:
-          str = `${valueIndent}+ ${key}: ${valueStr}`;
-          strs.push(str);
-          break;
-        default:
-          str = `${valueIndent}  ${key}: ${valueStr}`;
-          strs.push(str);
-      }
-    });
-
-    strs.push(`${' '.repeat(level * 4)}}`);
-
-    return strs.join('\n');
+    const levelIndent = getLevelIndent(level);
+    return `{\n${nestedStr}\n${levelIndent}}`;
   };
 
   return helper(diff, 0);
