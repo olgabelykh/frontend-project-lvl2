@@ -1,59 +1,38 @@
-import {
-  STATUS_UNMODIFIED,
-  STATUS_MODIFIED,
-  STATUS_DELETED,
-  STATUS_ADDED,
-  STATUS_NESTED,
-} from '../compare.js';
+import isPlainObject from 'lodash.isplainobject';
+import { UNMODIFIED, MODIFIED, DELETED, ADDED } from '../compare.js';
 
-const getValueStr = (value, isComplex) => {
-  if (isComplex) {
+const getValueText = (value) => {
+  if (isPlainObject(value)) {
     return '[complex value]';
   }
 
-  if (typeof value === 'string') {
-    return `'${value}'`;
-  }
+  return typeof value === 'string' ? `'${value}'` : value;
+};
 
-  return value;
+const diffTypeMapping = {
+  [UNMODIFIED]: () => [],
+  [MODIFIED]: (path, { newValue, oldValue }) =>
+    `Property '${path}' was updated. From ${getValueText(
+      oldValue
+    )} to ${getValueText(newValue)}`,
+  [DELETED]: (path) => `Property '${path}' was removed`,
+  [ADDED]: (path, { value }) =>
+    `Property '${path}' was added with value: ${getValueText(value)}`,
 };
 
 export default (diff) => {
-  const helper = (nested, keys) => {
-    return nested
-      .filter(({ status }) => status !== STATUS_UNMODIFIED)
-      .map((item) => {
-        const {
-          key,
-          value,
-          prevValue,
-          isComplex,
-          isPrevComplex,
-          children,
-          status,
-        } = item;
+  const helper = (nested, pathParts) => {
+    return nested.flatMap((item) => {
+      const { key, children, type } = item;
+      const newPathParts = [...pathParts, key];
 
-        const pathKeys = [...keys, key];
-        const valuePath = pathKeys.join('.');
+      if (children) {
+        return helper(children, newPathParts);
+      }
 
-        const valueStr = getValueStr(value, isComplex);
-        const prevValueStr = getValueStr(prevValue, isPrevComplex);
-
-        switch (status) {
-          case STATUS_NESTED:
-            return helper(children, pathKeys);
-          case STATUS_MODIFIED:
-            return `Property '${valuePath}' was updated. From ${prevValueStr} to ${valueStr}`;
-          case STATUS_DELETED:
-            return `Property '${valuePath}' was removed`;
-          case STATUS_ADDED:
-            return `Property '${valuePath}' was added with value: ${valueStr}`;
-          default:
-            throw new Error('Unexpeted status');
-        }
-      })
-      .join('\n');
+      return diffTypeMapping[type](newPathParts.join('.'), item);
+    });
   };
 
-  return helper(diff, []);
+  return helper(diff, []).join('\n');
 };

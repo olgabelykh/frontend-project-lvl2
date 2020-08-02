@@ -1,66 +1,55 @@
 [
  {
   "key": "setting1",
-  "value": "0",
-  "isComplex": false,
-  "status": "deleted"
+  "value": 0,
+  "type": "deleted"
  },
  {
   "key": "setting2",
-  "value": "10",
-  "status": "unmodified"
+  "value": 10,
+  "type": "unmodified"
  },
  {
   "key": "section1",
   "children": [
    {
     "key": "setting3",
-    "value": "ins.ico",
-    "isComplex": false,
-    "prevValue": "install.ico",
-    "isPrevComplex": false,
-    "status": "modified"
+    "newValue": "ins.ico",
+    "oldValue": "install.ico",
+    "type": "modified"
    }
-  ],
-  "status": "nested"
+  ]
  },
  {
   "key": "section2",
   "value": {},
-  "isComplex": true,
-  "status": "deleted"
+  "type": "deleted"
  },
  {
   "key": "section3",
   "children": [
    {
     "key": "IconIndex",
-    "value": "1",
-    "isComplex": false,
-    "prevValue": "0",
-    "isPrevComplex": false,
-    "status": "modified"
+    "newValue": 1,
+    "oldValue": 0,
+    "type": "modified"
    },
    {
     "key": "InfoTip",
     "value": "Description",
-    "status": "unmodified"
+    "type": "unmodified"
    },
    {
     "key": "value",
-    "value": "8",
-    "isComplex": false,
-    "prevValue": "6",
-    "isPrevComplex": false,
-    "status": "modified"
+    "newValue": 8,
+    "oldValue": 6,
+    "type": "modified"
    }
-  ],
-  "status": "nested"
+  ]
  },
  {
   "key": "setting0",
-  "value": "0",
-  "isComplex": false,
-  "status": "added"
+  "value": 0,
+  "type": "added"
  }
 ]
