@@ -1,49 +1,47 @@
-import has from 'lodash.has';
-import isPlainObject from 'lodash.isplainobject';
+import _ from 'lodash';
 
 export const UNMODIFIED = 'unmodified';
 export const MODIFIED = 'modified';
 export const DELETED = 'deleted';
 export const ADDED = 'added';
+export const NESTED = 'nested';
 
 const compare = (obj1, obj2) => {
   const completeObj = { ...obj1, ...obj2 };
   return Object.keys(completeObj).map((key) => {
-    const value1 = obj1[key];
-    const value2 = obj2[key];
-    const isComplexValue1 = isPlainObject(value1);
-    const isComplexValue2 = isPlainObject(value2);
-    const hasKeyObj1 = has(obj1, key);
-    const hasKeyObj2 = has(obj2, key);
-
-    if (value1 === value2) {
-      return { key, value: value1, type: UNMODIFIED };
+    if (obj1[key] === obj2[key]) {
+      return { key, value: obj1[key], type: UNMODIFIED };
     }
 
-    if (isComplexValue1 && isComplexValue2 && hasKeyObj1 && hasKeyObj2) {
-      return { key, children: compare(value1, value2) };
+    if (
+      _.isPlainObject(obj1[key]) &&
+      _.isPlainObject(obj2[key]) &&
+      _.has(obj1, key) &&
+      _.has(obj2, key)
+    ) {
+      return { key, children: compare(obj1[key], obj2[key]), type: NESTED };
     }
 
-    if (hasKeyObj1 && hasKeyObj2) {
+    if (_.has(obj1, key) && _.has(obj2, key)) {
       return {
         key,
-        newValue: value2,
-        oldValue: value1,
+        newValue: obj2[key],
+        oldValue: obj1[key],
         type: MODIFIED,
       };
     }
 
-    if (hasKeyObj1) {
+    if (_.has(obj1, key)) {
       return {
         key,
-        value: value1,
+        value: obj1[key],
         type: DELETED,
       };
     }
 
     return {
       key,
-      value: value2,
+      value: obj2[key],
       type: ADDED,
     };
   });

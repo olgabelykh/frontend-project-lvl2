@@ -1,8 +1,8 @@
-import isPlainObject from 'lodash.isplainobject';
-import { UNMODIFIED, MODIFIED, DELETED, ADDED } from '../compare.js';
+import _ from 'lodash';
+import { UNMODIFIED, MODIFIED, DELETED, ADDED, NESTED } from '../compare.js';
 
-const getValueText = (value) => {
-  if (isPlainObject(value)) {
+const stringify = (value) => {
+  if (_.isPlainObject(value)) {
     return '[complex value]';
   }
 
@@ -12,27 +12,27 @@ const getValueText = (value) => {
 const diffTypeMapping = {
   [UNMODIFIED]: () => [],
   [MODIFIED]: (path, { newValue, oldValue }) =>
-    `Property '${path}' was updated. From ${getValueText(
-      oldValue
-    )} to ${getValueText(newValue)}`,
+    `Property '${path}' was updated. From ${stringify(oldValue)} to ${stringify(
+      newValue
+    )}`,
   [DELETED]: (path) => `Property '${path}' was removed`,
   [ADDED]: (path, { value }) =>
-    `Property '${path}' was added with value: ${getValueText(value)}`,
+    `Property '${path}' was added with value: ${stringify(value)}`,
 };
 
 export default (diff) => {
-  const helper = (nested, pathParts) => {
-    return nested.flatMap((item) => {
+  const helper = (pathParts, node) => {
+    return node.flatMap((item) => {
       const { key, children, type } = item;
       const newPathParts = [...pathParts, key];
 
-      if (children) {
-        return helper(children, newPathParts);
+      if (type === NESTED) {
+        return helper(newPathParts, children);
       }
 
       return diffTypeMapping[type](newPathParts.join('.'), item);
     });
   };
 
-  return helper(diff, []).join('\n');
+  return helper([], diff).join('\n');
 };

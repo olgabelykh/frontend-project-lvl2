@@ -18,7 +18,8 @@
     "oldValue": "install.ico",
     "type": "modified"
    }
-  ]
+  ],
+  "type": "nested"
  },
  {
   "key": "section2",
@@ -45,7 +46,8 @@
     "oldValue": 6,
     "type": "modified"
    }
-  ]
+  ],
+  "type": "nested"
  },
  {
   "key": "setting0",
