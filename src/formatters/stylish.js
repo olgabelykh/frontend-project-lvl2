@@ -17,7 +17,7 @@ const stringify = (depth, item, diffTypeMapping) => {
     return '{}';
   }
 
-  const items = entries.flatMap(([key, value]) =>
+  const items = entries.map(([key, value]) =>
     diffTypeMapping[UNMODIFIED](depth + 1, { key, value })
   );
 
