@@ -11,28 +11,23 @@ const stringify = (value) => {
 
 const diffTypeMapping = {
   [UNMODIFIED]: () => [],
-  [MODIFIED]: (path, { newValue, oldValue }) =>
-    `Property '${path}' was updated. From ${stringify(oldValue)} to ${stringify(
-      newValue
+  [MODIFIED]: (pathParts, { newValue, oldValue }) =>
+    `Property '${pathParts.join('.')}' was updated. From ${stringify(
+      oldValue
+    )} to ${stringify(newValue)}`,
+  [DELETED]: (pathParts) => `Property '${pathParts.join('.')}' was removed`,
+  [ADDED]: (pathParts, { value }) =>
+    `Property '${pathParts.join('.')}' was added with value: ${stringify(
+      value
     )}`,
-  [DELETED]: (path) => `Property '${path}' was removed`,
-  [ADDED]: (path, { value }) =>
-    `Property '${path}' was added with value: ${stringify(value)}`,
+  [NESTED]: (pathParts, { children }, helper) => helper(pathParts, children),
 };
 
 export default (diff) => {
-  const helper = (pathParts, node) => {
-    return node.flatMap((item) => {
-      const { key, children, type } = item;
-      const newPathParts = [...pathParts, key];
-
-      if (type === NESTED) {
-        return helper(newPathParts, children);
-      }
-
-      return diffTypeMapping[type](newPathParts.join('.'), item);
-    });
-  };
+  const helper = (pathParts, node) =>
+    node.flatMap((item) =>
+      diffTypeMapping[item.type]([...pathParts, item.key], item, helper)
+    );
 
   return helper([], diff).join('\n');
 };

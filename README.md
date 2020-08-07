@@ -14,34 +14,10 @@ Compares two configuration files and shows a difference.
 
 [![asciicast](https://asciinema.org/a/349498.svg)](https://asciinema.org/a/349498)
 
-### compares two json files - report plain
-
-[![asciicast](https://asciinema.org/a/349499.svg)](https://asciinema.org/a/349499)
-
-### compares two json files - report json
-
-[![asciicast](https://asciinema.org/a/349500.svg)](https://asciinema.org/a/349500)
-
-### compares two yml files - report stylish
-
-[![asciicast](https://asciinema.org/a/349501.svg)](https://asciinema.org/a/349501)
-
 ### compares two yml files - report plain
 
 [![asciicast](https://asciinema.org/a/349502.svg)](https://asciinema.org/a/349502)
 
-### compares two yml files - report json
-
-[![asciicast](https://asciinema.org/a/349503.svg)](https://asciinema.org/a/349503)
-
-### compares two ini files - report stylish
-
-[![asciicast](https://asciinema.org/a/349504.svg)](https://asciinema.org/a/349504)
-
-### compares two ini files - report plain
-
-[![asciicast](https://asciinema.org/a/349505.svg)](https://asciinema.org/a/349505)
-
 ### compares two ini files - report json
 
-[![asciicast](https://asciinema.org/a/349510.svg)](https://asciinema.org/a/349510)
+[![asciicast](https://asciinema.org/a/352220.svg)](https://asciinema.org/a/352220)
