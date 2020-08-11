@@ -20,14 +20,14 @@ const diffTypeMapping = {
     `Property '${pathParts.join('.')}' was added with value: ${stringify(
       value
     )}`,
-  [NESTED]: (pathParts, { children }, helper) => helper(pathParts, children),
+  [NESTED]: (pathParts, { children }, iter) => iter(pathParts, children),
 };
 
 export default (diff) => {
-  const helper = (pathParts, node) =>
+  const iter = (pathParts, node) =>
     node.flatMap((item) =>
-      diffTypeMapping[item.type]([...pathParts, item.key], item, helper)
+      diffTypeMapping[item.type]([...pathParts, item.key], item, iter)
     );
 
-  return helper([], diff).join('\n');
+  return iter([], diff).join('\n');
 };

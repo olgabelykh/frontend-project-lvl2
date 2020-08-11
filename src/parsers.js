@@ -15,9 +15,9 @@ const formatMapping = {
 export default (data, format) => {
   const parse = formatMapping[format];
 
-  if (parse) {
-    return parse(data);
+  if (!parse) {
+    throw new Error(`Unsupported parse format: ${format}`);
   }
 
-  throw new Error('Unsupported parse format');
+  return parse(data);
 };

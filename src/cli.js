@@ -2,7 +2,7 @@ import path from 'path';
 import { createRequire } from 'module';
 import program from 'commander';
 
-import genDiff from './gendiff.js';
+import genDiff from '../index.js';
 
 const require = createRequire(import.meta.url);
 const { version, description } = require('../package.json');

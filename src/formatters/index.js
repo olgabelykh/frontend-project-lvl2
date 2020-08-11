@@ -11,6 +11,6 @@ export default (diff, format) => {
     case 'json':
       return formatJSON(diff);
     default:
-      throw new Error('unsupported output format');
+      throw new Error(`Unsupported output format: ${format}`);
   }
 };

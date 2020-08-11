@@ -7,31 +7,9 @@ export const ADDED = 'added';
 export const NESTED = 'nested';
 
 const compare = (obj1, obj2) => {
-  const completeObj = { ...obj1, ...obj2 };
-  return Object.keys(completeObj).map((key) => {
-    if (obj1[key] === obj2[key]) {
-      return { key, value: obj1[key], type: UNMODIFIED };
-    }
-
-    if (
-      _.isPlainObject(obj1[key]) &&
-      _.isPlainObject(obj2[key]) &&
-      _.has(obj1, key) &&
-      _.has(obj2, key)
-    ) {
-      return { key, children: compare(obj1[key], obj2[key]), type: NESTED };
-    }
-
-    if (_.has(obj1, key) && _.has(obj2, key)) {
-      return {
-        key,
-        newValue: obj2[key],
-        oldValue: obj1[key],
-        type: MODIFIED,
-      };
-    }
-
-    if (_.has(obj1, key)) {
+  const keys = _.union(Object.keys(obj1), Object.keys(obj2));
+  return keys.map((key) => {
+    if (!_.has(obj2, key)) {
       return {
         key,
         value: obj1[key],
@@ -39,10 +17,27 @@ const compare = (obj1, obj2) => {
       };
     }
 
+    if (!_.has(obj1, key)) {
+      return {
+        key,
+        value: obj2[key],
+        type: ADDED,
+      };
+    }
+
+    if (_.isPlainObject(obj1[key]) && _.isPlainObject(obj2[key])) {
+      return { key, children: compare(obj1[key], obj2[key]), type: NESTED };
+    }
+
+    if (obj1[key] === obj2[key]) {
+      return { key, value: obj1[key], type: UNMODIFIED };
+    }
+
     return {
       key,
-      value: obj2[key],
-      type: ADDED,
+      newValue: obj2[key],
+      oldValue: obj1[key],
+      type: MODIFIED,
     };
   });
 };

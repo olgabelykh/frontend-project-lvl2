@@ -55,21 +55,21 @@ const diffTypeMapping = {
       value,
       diffTypeMapping
     )}`,
-  [NESTED]: (depth, { key, children }, helper) =>
+  [NESTED]: (depth, { key, children }, iter) =>
     `${getValueIndent(depth)}  ${key}: ${stringify(
       depth,
-      helper(depth + 1, children),
+      iter(depth + 1, children),
       diffTypeMapping
     )}`,
 };
 
 export default (diff) => {
-  const helper = (depth, node) => {
+  const iter = (depth, node) => {
     const items = node.flatMap((item) =>
-      diffTypeMapping[item.type](depth, item, helper)
+      diffTypeMapping[item.type](depth, item, iter)
     );
     return ['{', ...items, `${getDepthIndent(depth)}}`].join('\n');
   };
 
-  return helper(0, diff);
+  return iter(0, diff);
 };
