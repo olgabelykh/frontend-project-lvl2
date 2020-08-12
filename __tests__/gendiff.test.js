@@ -20,7 +20,7 @@ describe('genDiff', () => {
       const filepath1 = getFixturePath(filename1);
       const filepath2 = getFixturePath(filename2);
 
-      const diffFilepath = getFixturePath('expected', format, diffFilename);
+      const diffFilepath = getFixturePath('expected', diffFilename);
       const expected = fs.readFileSync(diffFilepath, 'utf8').trim();
 
       expect(genDiff(filepath1, filepath2, format)).toBe(expected);
