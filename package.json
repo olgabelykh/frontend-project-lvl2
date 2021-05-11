@@ -17,7 +17,7 @@
     "commander": "^6.0.0",
     "ini": "https://github.com/olgabelykh/ini.git",
     "js-yaml": "^3.14.0",
-    "lodash": "^4.17.19"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "eslint": "^7.5.0",
